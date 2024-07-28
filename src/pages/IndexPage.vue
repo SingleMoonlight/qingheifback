@@ -53,6 +53,6 @@ import { copyrightInfo } from '@/utils/constant'
 }
 
 .copyright-container {
-    color: var(--text-color);
+    color: var(--secondary-text-color);
 }
 </style>
