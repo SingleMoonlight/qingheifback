@@ -1,6 +1,11 @@
 <script setup>
 import CopyrightStatement from '@/components/CopyrightStatement.vue'
-import { copyrightInfo } from '@/utils/constant'
+import LineButton from '@/components/LineButton.vue'
+import { copyrightInfo, navList } from '@/utils/constant'
+
+function handleNavButtonClick() {
+    console.log('click');
+}
 
 </script>
 
@@ -15,13 +20,12 @@ import { copyrightInfo } from '@/utils/constant'
         </div>
         <div class="padding-container"></div>
         <div class="nav-container">
-            <div class="nav-item" style="width: 80px; height: 40px; background-color: brown;"></div>
-            <div class="nav-item" style="width: 80px; height: 40px; background-color: brown;"></div>
-            <div class="nav-item" style="width: 80px; height: 40px; background-color: brown;"></div>
-            <div class="nav-item" style="width: 80px; height: 40px; background-color: brown;"></div>
+            <div class="nav-item" v-for="(item, index) in navList" :key="index">
+                <div class="nav-item-text">{{item}}</div>
+            </div>
         </div>
         <div class="nav-button-container">
-
+            <LineButton @click="handleNavButtonClick"></LineButton>
         </div>
     </div>
     <div class="body">
@@ -74,7 +78,6 @@ import { copyrightInfo } from '@/utils/constant'
 .padding-container {
     height: 60px;
     flex: 1;
-    background-color: blueviolet;
 }
 
 .nav-container {
@@ -84,15 +87,26 @@ import { copyrightInfo } from '@/utils/constant'
     display: flex;
     justify-content: end;
     align-items: center;
-    background-color: aqua;
+}
+
+.nav-item {
+    height: 40px;
+    width: 40px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-item-text {
+    color: var(--primary-text-color);
 }
 
 .nav-button-container {
     display: none;
+    align-items: center;
     height: 60px;
-    width: 60px;
     padding-right: 100px;
-    background-color: aquamarine;
 }
 
 .body {
@@ -124,14 +138,14 @@ import { copyrightInfo } from '@/utils/constant'
 
 @media (max-width: 420px) {
     .logo-container {
-        padding-left: 10px;
+        padding-left: 20px;
     }
     .nav-container {
         display: none;
     }
     .nav-button-container {
         display: flex;
-        padding-right: 10px
+        padding-right: 20px
     }
 }
 </style>

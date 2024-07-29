@@ -8,3 +8,4 @@ export const copyrightInfo = {
     icpBeianUrl: 'https://beian.miit.gov.cn/',
 }
 
+export const navList = ['首页', '关于', '站点', '归档']
