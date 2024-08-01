@@ -1,30 +1,38 @@
 <script setup>
-import { ref } from 'vue'
+import { watch, ref } from 'vue'
 
 const emit = defineEmits(['click'])
+const props = defineProps({
+    checked: Boolean,
+})
+
 const lineBtnTopRef = ref(null)
 const lineBtnMidRef = ref(null)
 const lineBtnBtmRef = ref(null)
 const checked = ref(false)
 
-function handleButtonClick() {
-    if (checked.value) {
-        lineBtnTopRef.value.style.transform = 'rotate(0deg)';
-        lineBtnMidRef.value.style.opacity = '1';
-        lineBtnMidRef.value.style.margin = '4px 0'
-        lineBtnBtmRef.value.style.transform = 'rotate(0deg)';
-        checked.value = false;
-    } else {
+function changeButtonState(checked) {
+    if (checked) {
         lineBtnTopRef.value.style.transform = 'rotate(45deg)';
         lineBtnMidRef.value.style.opacity = '0';
         lineBtnMidRef.value.style.margin = '-2px 0'
         lineBtnBtmRef.value.style.transform = 'rotate(-45deg)';
-        checked.value = true;
+    } else {
+        lineBtnTopRef.value.style.transform = 'rotate(0deg)';
+        lineBtnMidRef.value.style.opacity = '1';
+        lineBtnMidRef.value.style.margin = '4px 0'
+        lineBtnBtmRef.value.style.transform = 'rotate(0deg)';
     }
+}
 
+function handleButtonClick() {
     emit('click');
 }
 
+watch(() => props.checked, (newVal) => {
+    checked.value = newVal;
+    changeButtonState(checked.value);
+});
 </script>
 
 <template>
@@ -38,6 +46,7 @@ function handleButtonClick() {
 
 <style scoped>
 .line-button {
+    padding: 10px;
     cursor: pointer;
     display: flex;
     flex-direction: column;

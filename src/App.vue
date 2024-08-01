@@ -16,7 +16,5 @@ import IndexPage from './pages/IndexPage.vue'
   width: 100%;
   height: 100%;
   background: var(--background-color);
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 </style>
