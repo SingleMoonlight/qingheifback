@@ -24,6 +24,10 @@ a {
   color: var(--secondary-text-color);
 }
 
+::selection {
+  user-select: none;
+}
+
 ::-webkit-scrollbar {
   width: 4px;
 }

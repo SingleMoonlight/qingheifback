@@ -9,3 +9,5 @@ export const copyrightInfo = {
 }
 
 export const navList = ['首页', '关于', '站点', '归档']
+
+export const slogan = 'A Journey of Discovery'

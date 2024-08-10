@@ -1,7 +1,8 @@
 <script setup>
 import CopyrightStatement from '@/components/CopyrightStatement.vue'
+import DynStars from '@/components/DynStars.vue'
 import LineButton from '@/components/LineButton.vue'
-import { copyrightInfo, navList } from '@/utils/constant'
+import { copyrightInfo, navList, slogan } from '@/utils/constant'
 import { onMounted, ref } from 'vue'
 
 const headerRef = ref(null)
@@ -67,6 +68,12 @@ onMounted(() => {
 </script>
 
 <template>
+    <div class="banner">
+        <div class="banner-bg">
+            <DynStars></DynStars>
+        </div>
+        <div class="banner-slogan">{{ slogan }}</div>
+    </div>
     <div class="header" ref="headerRef">
         <div class="logo-container">
             <img class="logo-img" src="@/assets/imgs/logo.png" @click="handleLogoClick" />
@@ -85,7 +92,6 @@ onMounted(() => {
             <LineButton :checked="showAside" @click="handleNavButtonClick"></LineButton>
         </div>
     </div>
-    <div class="banner"></div>
     <div class="body">
         <div style="height: 1000px; width: 100%; background-color: transparent;"></div>
     </div>
@@ -106,7 +112,24 @@ onMounted(() => {
 <style scoped>
 .banner {
     width: 100%;
-    min-height: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-bg {
+    width: 100%;
+    height: 100%;
+}
+
+.banner-slogan {
+    position: absolute;
+    color: var(--primary-text-color);
+    font-weight: 600;
+    font-size: 86px;
+    padding: 0 200px;
+    text-align: center;
 }
 
 .header {
@@ -123,7 +146,7 @@ onMounted(() => {
 }
 
 .header-transition {
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(30px);
     border-bottom: var(--nav-border);
 }
 
@@ -234,7 +257,7 @@ onMounted(() => {
     width: 260px;
     border-left: var(--nav-border);
     opacity: 0;
-    background-color: var(--background-color);
+    backdrop-filter: blur(30px);
     transition: opacity 0.25s ease, right 0.25s ease;
 }
 
@@ -288,6 +311,16 @@ onMounted(() => {
 
     .nav-button-container-transition {
         transform: translateX(-200px);
+    }
+
+    .banner-slogan {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 500px) {
+    .banner-slogan {
+        font-size: 56px;
     }
 }
 </style>
