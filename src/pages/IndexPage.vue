@@ -2,11 +2,13 @@
 import CopyrightStatement from '@/components/CopyrightStatement.vue'
 import DynStars from '@/components/DynStars.vue'
 import LineButton from '@/components/LineButton.vue'
+import PresentSection from '@/components/PresentSection.vue'
 import { copyrightInfo, navList, slogan } from '@/utils/constant'
 import { onMounted, ref } from 'vue'
 
 const headerRef = ref(null)
 const asideRef = ref(null)
+const navListRef = ref([null])
 const navBtnRef = ref(null)
 const showAside = ref(false)
 
@@ -23,7 +25,11 @@ function handleNavClick(index) {
     asideDom.classList.remove('aside-open');
     navBtnDom.classList.remove('nav-button-container-transition');
 
-    console.log(index);
+    let offsetTop = 0;
+    if (index !== 0) {
+        offsetTop = navListRef.value[index].value.section.offsetTop - 60;
+    }
+    window.scrollTo({ behavior: 'smooth' , top: offsetTop });
 }
 
 function handleNavButtonClick() {
@@ -63,6 +69,10 @@ onMounted(() => {
     window.addEventListener('scroll', () => {
         setHeaderFixed();
     });
+
+    for (let i = 0; i < navList.length; i++) {
+        navListRef.value.push(ref(null))
+    }
 })
 
 </script>
@@ -93,7 +103,15 @@ onMounted(() => {
         </div>
     </div>
     <div class="body">
-        <div style="height: 1000px; width: 100%; background-color: transparent;"></div>
+        <PresentSection :title="navList[1]" :ref="navListRef[1]">
+            <div style="height: 500px; width: 100%; background-color: transparent;"></div>
+        </PresentSection>
+        <PresentSection :title="navList[2]" :ref="navListRef[2]">
+            <div style="height: 500px; width: 100%; background-color: transparent;"></div>
+        </PresentSection>
+        <PresentSection :title="navList[3]" :ref="navListRef[3]">
+            <div style="height: 500px; width: 100%; background-color: transparent;"></div>
+        </PresentSection>
     </div>
     <div class="footer">
         <div class="copyright-container">
