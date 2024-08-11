@@ -3,6 +3,7 @@ import CopyrightStatement from '@/components/CopyrightStatement.vue'
 import DynStars from '@/components/DynStars.vue'
 import LineButton from '@/components/LineButton.vue'
 import PresentSection from '@/components/PresentSection.vue'
+import AboutMeSection from '@/components/AboutMeSection.vue'
 import { copyrightInfo, navList, slogan } from '@/utils/constant'
 import { onMounted, ref } from 'vue'
 
@@ -104,12 +105,9 @@ onMounted(() => {
     </div>
     <div class="body">
         <PresentSection :title="navList[1]" :ref="navListRef[1]">
-            <div style="height: 500px; width: 100%; background-color: transparent;"></div>
+            <AboutMeSection></AboutMeSection>
         </PresentSection>
         <PresentSection :title="navList[2]" :ref="navListRef[2]">
-            <div style="height: 500px; width: 100%; background-color: transparent;"></div>
-        </PresentSection>
-        <PresentSection :title="navList[3]" :ref="navListRef[3]">
             <div style="height: 500px; width: 100%; background-color: transparent;"></div>
         </PresentSection>
     </div>
