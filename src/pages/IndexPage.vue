@@ -4,6 +4,7 @@ import DynStars from '@/components/DynStars.vue'
 import LineButton from '@/components/LineButton.vue'
 import PresentSection from '@/components/PresentSection.vue'
 import AboutMeSection from '@/components/AboutMeSection.vue'
+import WebsiteSection from '@/components/WebsiteSection.vue'
 import { copyrightInfo, navList, slogan } from '@/utils/constant'
 import { onMounted, ref } from 'vue'
 
@@ -108,7 +109,7 @@ onMounted(() => {
             <AboutMeSection></AboutMeSection>
         </PresentSection>
         <PresentSection :title="navList[2]" :ref="navListRef[2]">
-            <div style="height: 500px; width: 100%; background-color: transparent;"></div>
+            <WebsiteSection></WebsiteSection>
         </PresentSection>
     </div>
     <div class="footer">
@@ -159,6 +160,7 @@ onMounted(() => {
     align-items: center;
     border-bottom: 1px solid rgba(0, 0, 0, 0);
     transition: all 0.25s ease;
+    z-index: 999;
 }
 
 .header-transition {
@@ -275,6 +277,7 @@ onMounted(() => {
     opacity: 0;
     backdrop-filter: blur(30px);
     transition: opacity 0.25s ease, right 0.25s ease;
+    z-index: 999;
 }
 
 .aside-open {
