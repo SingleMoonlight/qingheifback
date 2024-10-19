@@ -9,54 +9,45 @@ import { copyrightInfo, navList, slogan } from '@/utils/constant'
 import { onMounted, ref } from 'vue'
 
 const headerRef = ref(null)
-const asideRef = ref(null)
 const navListRef = ref([null])
-const navBtnRef = ref(null)
-const showAside = ref(false)
+const showNavMenu = ref(false)
 
 function handleLogoClick() {
     location.reload();
 }
 
 function handleNavClick(index) {
-    let asideDom = asideRef.value;
-    let navBtnDom = navBtnRef.value;
-
-    showAside.value = false;
-
-    asideDom.classList.remove('aside-open');
-    navBtnDom.classList.remove('nav-button-container-transition');
+    showNavMenu.value = false;
 
     let offsetTop = 0;
     if (index !== 0) {
         offsetTop = navListRef.value[index].value.section.offsetTop - 60;
     }
-    window.scrollTo({ behavior: 'smooth' , top: offsetTop });
+
+    window.scrollTo({ behavior: 'smooth', top: offsetTop });
 }
 
 function handleNavButtonClick() {
-    let asideDom = asideRef.value;
-    let navBtnDom = navBtnRef.value;
+    let headerDom = headerRef.value;
 
-    if (asideRef === null || navBtnRef === null) {
+    if (headerDom === null) {
         return;
     }
+    showNavMenu.value = !showNavMenu.value;
 
-    showAside.value = !showAside.value;
-
-    if (showAside.value) {
-        asideDom.classList.add('aside-open');
-        navBtnDom.classList.add('nav-button-container-transition');
+    if (showNavMenu.value) {
+        headerDom.classList.add('header-transition');
     } else {
-        asideDom.classList.remove('aside-open');
-        navBtnDom.classList.remove('nav-button-container-transition');
+        if (window.scrollY <= headerDom.offsetHeight) {
+            headerDom.classList.remove('header-transition');
+        }
     }
 }
 
 function setHeaderFixed() {
     let headerDom = headerRef.value;
 
-    if (headerDom === null) {
+    if (headerDom === null || showNavMenu.value) {
         return;
     }
 
@@ -100,8 +91,8 @@ onMounted(() => {
                 <div class="nav-item-text">{{ item }}</div>
             </div>
         </div>
-        <div class="nav-button-container" ref="navBtnRef">
-            <LineButton :checked="showAside" @click="handleNavButtonClick"></LineButton>
+        <div class="nav-button-container">
+            <LineButton :checked="showNavMenu" @click="handleNavButtonClick"></LineButton>
         </div>
     </div>
     <div class="body">
@@ -117,13 +108,16 @@ onMounted(() => {
             <CopyrightStatement :show-copyright="true" :copyright-info="copyrightInfo"></CopyrightStatement>
         </div>
     </div>
-    <div class="aside" ref="asideRef">
-        <div class="aside-menu">
-            <div class="aside-menu-item" v-for="(item, index) in navList" :key="index" @click="handleNavClick(index)">
-                <div class="nav-item-text">{{ item }}</div>
+    <Transition name="fade" mode="out-in">        
+        <div class="nav-menu-container" v-show="showNavMenu">
+            <div class="nav-menu">
+                <div class="nav-menu-item" v-for="(item, index) in navList" :key="index" @click="handleNavClick(index)">
+                    <div class="nav-item-text">{{ item }}</div>
+                    <div class="nav-menu-divide-line"></div>
+                </div>
             </div>
         </div>
-    </div>
+    </Transition>
 </template>
 
 <style scoped>
@@ -248,10 +242,6 @@ onMounted(() => {
     transition: all 0.25s ease;
 }
 
-.nav-button-container-transition {
-    transform: translateX(-260px);
-}
-
 .body {
     width: 100%;
 }
@@ -267,31 +257,27 @@ onMounted(() => {
     color: var(--secondary-text-color);
 }
 
-.aside {
+.nav-menu-container {
     position: fixed;
-    top: 0;
-    right: -260px;
+    display: flex;
+    justify-content: center;
+    top: 60px;
     height: 100%;
-    width: 260px;
-    border-left: var(--nav-border);
-    opacity: 0;
+    width: 100%;
     backdrop-filter: blur(30px);
-    transition: opacity 0.25s ease, right 0.25s ease;
     z-index: 999;
 }
 
-.aside-open {
-    right: 0;
-    opacity: 1
-}
-
-.aside-menu {
+.nav-menu {
+    width: 400px;
     color: var(--primary-text-color);
 }
 
-.aside-menu-item {
+.nav-menu-item {
     display: flex;
     align-items: center;
+    flex-direction: column;
+    justify-content: center;
     height: 40px;
     margin: 10px;
     padding: 0 20px;
@@ -300,12 +286,21 @@ onMounted(() => {
     transition: all 0.25s ease;
 }
 
-.aside-menu-item:hover {
+.nav-menu-item:hover {
     background-color: var(--menu-item-hover-background-color);
 }
 
-.aside-menu-item:hover .nav-item-text::before {
+.nav-menu-item:hover .nav-item-text::before {
     width: 100%;
+}
+
+.nav-menu-divide-line {
+    width: 100%;
+    height: 1px;
+    border-radius: 1px;
+    background-color: var(--menu-item-hover-background-color);
+    position: relative;
+    top: 8px;
 }
 
 @media (max-width: 1000px) {
@@ -324,22 +319,13 @@ onMounted(() => {
 }
 
 @media (max-width: 500px) {
-    .aside {
-        width: 200px;
-    }
-
-    .nav-button-container-transition {
-        transform: translateX(-200px);
-    }
-
     .banner-slogan {
         padding: 0 20px;
-    }
-}
-
-@media (max-width: 500px) {
-    .banner-slogan {
         font-size: 56px;
+    }
+
+    .nav-menu {
+        width: 100%;
     }
 }
 </style>
