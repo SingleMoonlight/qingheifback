@@ -52,12 +52,13 @@ onMounted(() => {
     let starLayer1Dom = starLayer1Ref.value;
     let starLayer2Dom = starLayer2Ref.value;
     let starLayer3Dom = starLayer3Ref.value;
-    let density = (document.documentElement.clientHeight / window.screen.height) * (document.documentElement.clientWidth / window.screen.width);
+    let density = (document.documentElement.clientHeight / window.screen.height) * (document.documentElement.clientWidth / window.screen.width) / window.devicePixelRatio;  
 
     let starLayer1Class = createClass(
         "star-layer1", {
             width: 1,
             height: 1,
+            borderRadius: 1,
             background: 'transparent',
             boxShadow: generateStarBoxShadowStyle(450 * density),
         });
@@ -65,6 +66,7 @@ onMounted(() => {
         "star-layer2", {
             width: 2,
             height: 2,
+            borderRadius: 2,
             background: 'transparent',
             boxShadow: generateStarBoxShadowStyle(150 * density),
         });
@@ -72,6 +74,7 @@ onMounted(() => {
         "star-layer3", {
             width: 3,
             height: 3,
+            borderRadius: 3,
             background: 'transparent',
             boxShadow: generateStarBoxShadowStyle(50 * density),
         });
