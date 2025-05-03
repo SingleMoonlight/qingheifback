@@ -1,156 +1,101 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const starLayer1Ref = ref(null)
-const starLayer2Ref = ref(null)
-const starLayer3Ref = ref(null)
+const canvas = ref(null)
+const particles = ref([])
+const particleCount = 200
+let animationFrameId = null
 
-function phraseStyle(style) {
-    let keys = Object.keys(style);
-    let keyValue = keys.map(key => {
-        let kebabCaseKey = key.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-        let value = `${style[key]}${typeof style[key] === "number" ? "px" : ""}`;
-        return `${kebabCaseKey}:${value};`;
-    });
-    return `{${keyValue.join("")}}`;
-}
+class Particle {
+    constructor(canvasWidth, canvasHeight) {
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
+        this.reset();
+        this.velocity = Math.random() * 0.5 + 0.2;
+    }
 
-function createClass(name, style) {
-    let styleSheet;
-    for (let i = 0; i < document.styleSheets.length; i++) {
-        if (document.styleSheets[i].CSSInJS) {
-            styleSheet = document.styleSheets[i];
-            break;
+    reset() {
+        this.x = Math.random() * this.canvasWidth;
+        this.y = Math.random() * this.canvasHeight;
+        this.size = Math.random() * 2 + 1;
+        this.alpha = Math.random() * 0.5 + 0.1;
+    }
+
+    update() {
+        this.y -= this.velocity;
+        if (this.y < -10) {
+            this.reset();
         }
     }
-    if (!styleSheet) {
-        let style = document.createElement("style");
-        document.head.appendChild(style);
-        styleSheet = style.sheet;
-        styleSheet.CSSInJS = true;
-    }
 
-    styleSheet.insertRule(`.${name}${phraseStyle(style)}`);
-    return name;
+    draw(ctx) {
+        ctx.fillStyle = `rgba(169, 177, 188, ${this.alpha})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
 }
 
-function generateStarBoxShadowStyle(starNum) {
-    let boxShadow = '';
+const initParticles = () => {
+    const { width, height } = canvas.value;
+    particles.value = Array.from({ length: particleCount }, () =>
+        new Particle(width, height)
+    )
+}
 
-    for (let i = 0; i < starNum; i++) {
-        let randomX = Math.floor(Math.random() * 100);
-        let randomY = Math.floor(Math.random() * 100);
+const resizeCanvas = () => {
+    if (canvas.value) {
+        canvas.value.width = window.innerWidth;
+        canvas.value.height = window.innerHeight;
+        initParticles();
+    }
+}
 
-        let randomBoxShadow = `${randomX}vw ${randomY}vh #FFF,`;
-        boxShadow += randomBoxShadow;
+const animate = () => {
+    const ctx = canvas.value?.getContext('2d');
+
+    if (!ctx) {
+        return;
     }
 
-    return boxShadow.slice(0, -1);
+    ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+
+    particles.value.forEach(particle => {
+        particle.update();
+        particle.draw(ctx);
+    })
+
+    animationFrameId = requestAnimationFrame(animate);
 }
 
 onMounted(() => {
-    let starLayer1Dom = starLayer1Ref.value;
-    let starLayer2Dom = starLayer2Ref.value;
-    let starLayer3Dom = starLayer3Ref.value;
-    let density = (document.documentElement.clientHeight / window.screen.height) * (document.documentElement.clientWidth / window.screen.width) / window.devicePixelRatio;  
-
-    let starLayer1Class = createClass(
-        "star-layer1", {
-            width: 1,
-            height: 1,
-            borderRadius: 1,
-            background: 'transparent',
-            boxShadow: generateStarBoxShadowStyle(450 * density),
-        });
-    let starLayer2Class = createClass(
-        "star-layer2", {
-            width: 2,
-            height: 2,
-            borderRadius: 2,
-            background: 'transparent',
-            boxShadow: generateStarBoxShadowStyle(150 * density),
-        });
-    let starLayer3Class = createClass(
-        "star-layer3", {
-            width: 3,
-            height: 3,
-            borderRadius: 3,
-            background: 'transparent',
-            boxShadow: generateStarBoxShadowStyle(50 * density),
-        });
-    starLayer1Dom.classList.add(starLayer1Class);
-    starLayer2Dom.classList.add(starLayer2Class);
-    starLayer3Dom.classList.add(starLayer3Class);
+    resizeCanvas();
+    initParticles();
+    animate();
+    window.addEventListener('resize', resizeCanvas);
 })
 
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', resizeCanvas);
+
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+})
 </script>
 
 <template>
-    <div class="stars-container">
-        <div class="star-layer1-anim" ref="starLayer1Ref"></div>
-        <div class="star-layer2-anim" ref="starLayer2Ref"></div>
-        <div class="star-layer3-anim" ref="starLayer3Ref"></div>
-    </div>
+    <canvas ref="canvas" class="particles-canvas"></canvas>
 </template>
 
 <style scoped>
-.stars-container {
-    --star-move-time: 100s;
+.particles-canvas {
     position: absolute;
-    width: 100vw;
-    height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
     overflow: hidden;
-}
-
-.star-layer1-anim {
-    animation: animStar calc(var(--star-move-time) * 1) linear infinite;
-}
-
-.star-layer1:after {
-    content: " ";
-    position: absolute;
-    width: inherit;
-    height: inherit;
-    top: 100vh;
-    background: inherit;
-    box-shadow: inherit;
-}
-
-.star-layer2-anim {
-    animation: animStar calc(var(--star-move-time) * 1.5) linear infinite;
-}
-
-.star-layer2:after {
-    content: " ";
-    position: absolute;
-    width: inherit;
-    height: inherit;
-    top: 100vh;
-    background: inherit;
-    box-shadow: inherit;
-}
-
-.star-layer3-anim {
-    animation: animStar calc(var(--star-move-time) * 2) linear infinite;
-}
-
-.star-layer3:after {
-    content: " ";
-    position: absolute;
-    width: inherit;
-    height: inherit;
-    top: 100vh;
-    background: inherit;
-    box-shadow: inherit;
-}
-
-@keyframes animStar {
-    from {
-        transform: translateY(0);
-    }
-
-    to {
-        transform: translateY(-100vh);
-    }
 }
 </style>
