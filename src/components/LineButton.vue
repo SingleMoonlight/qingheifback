@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const emit = defineEmits(['click'])
 const props = defineProps({
@@ -12,22 +12,22 @@ const checked = ref(false)
 
 function changeButtonState(checked) {
     if (checked) {
-        lineBtnMidRef.value.style.transform = `translateX(10px)`;
-        lineBtnBtmRef.value.style.transform = `translateX(4px)`;
+        lineBtnMidRef.value.style.transform = 'translateX(6px)'
+        lineBtnBtmRef.value.style.transform = 'translateX(3px)'
     } else {
-        lineBtnMidRef.value.style.transform = `translateX(0)`;
-        lineBtnBtmRef.value.style.transform = `translateX(0)`;
+        lineBtnMidRef.value.style.transform = 'translateX(0)'
+        lineBtnBtmRef.value.style.transform = 'translateX(0)'
     }
 }
 
 function handleButtonClick() {
-    emit('click');
+    emit('click')
 }
 
 watch(() => props.checked, (newVal) => {
-    checked.value = newVal;
-    changeButtonState(checked.value);
-});
+    checked.value = newVal
+    changeButtonState(checked.value)
+})
 </script>
 
 <template>
@@ -38,32 +38,33 @@ watch(() => props.checked, (newVal) => {
     </div>
 </template>
 
-
 <style scoped>
 .line-button {
-    padding: 10px;
+    padding: 8px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
 }
 
-.line-button-top, .line-button-mid, .line-button-btm {
-    border-radius: 2px;
-    height: 2px;
-    background-color: var(--primary-text-color);
-    transition: all 0.2s ease-in-out;
+.line-button-top,
+.line-button-mid,
+.line-button-btm {
+    border-radius: 1px;
+    height: 1.5px;
+    background-color: var(--text-primary);
+    transition: transform 0.2s ease-out;
 }
 
 .line-button-top {
-    width: 20px;
+    width: 18px;
 }
 
 .line-button-mid {
     width: 10px;
-    margin: 4px 0;
+    margin: 3.5px 0;
 }
 
 .line-button-btm {
-    width: 16px;
+    width: 14px;
 }
 </style>

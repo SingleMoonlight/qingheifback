@@ -12,6 +12,7 @@
   "dependencies": {
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
+    "lucide-vue-next": "^0.577.0",
     "vue": "^3.4.29"
   },
   "devDependencies": {

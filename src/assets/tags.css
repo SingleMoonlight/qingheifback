@@ -1,0 +1,44 @@
+/* Shared tag styles — used by AboutMeSection & ProjectCard */
+
+.tag {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    transition: background 0.15s ease;
+    cursor: default;
+}
+
+.tag--accent {
+    background: var(--tag-bg);
+    color: var(--tag-text);
+}
+.tag--accent:hover {
+    background: rgba(94, 106, 210, 0.18);
+}
+
+.tag--green {
+    background: var(--tag-bg-green);
+    color: var(--tag-text-green);
+}
+.tag--green:hover {
+    background: rgba(63, 185, 80, 0.18);
+}
+
+.tag--blue {
+    background: var(--tag-bg-blue);
+    color: var(--tag-text-blue);
+}
+.tag--blue:hover {
+    background: rgba(88, 166, 255, 0.18);
+}
+
+.tag--orange {
+    background: var(--tag-bg-orange);
+    color: var(--tag-text-orange);
+}
+.tag--orange:hover {
+    background: rgba(219, 141, 61, 0.18);
+}

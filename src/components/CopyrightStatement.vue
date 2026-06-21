@@ -8,40 +8,32 @@ const props = defineProps({
 const year = ref(0)
 
 onMounted(() => {
-    year.value = new Date().getFullYear();
+    year.value = new Date().getFullYear()
 })
-
 </script>
 
 <template>
     <div class="copyright" v-show="props.showCopyright">
-        © {{ props.copyrightInfo.startYear }}-{{ year }}
-        <a :underline="false" :href="props.copyrightInfo.ownerUrl" target="_blank">
-            {{ props.copyrightInfo.ownerInfo }}
-        </a>
+        <span>© {{ props.copyrightInfo.startYear }} — {{ year }}</span>
+        <a :href="props.copyrightInfo.ownerUrl" target="_blank">{{ props.copyrightInfo.ownerInfo }}</a>
     </div>
 </template>
 
-
-<style scpoed>
+<style scoped>
 .copyright {
-    font-size: 12px;
-    font-weight: lighter;
-    white-space: nowrap;
-    text-align: center;
-    display: inline-block;
-    transition: .25s;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-@media (max-width: 850px) {
-    .copyright {
-        opacity: 0;
-    }
+.copyright a {
+    color: var(--text-tertiary);
+    transition: color 0.15s ease;
 }
 
-@media(max-height: 500px) {
-    .copyright {
-        opacity: 0;
-    }
+.copyright a:hover {
+    color: var(--text-secondary);
 }
 </style>
