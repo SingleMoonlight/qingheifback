@@ -8,7 +8,7 @@ import ProjectsSection from '@/components/ProjectsSection.vue'
 import ContactSection from '@/components/ContactSection.vue'
 import CopyrightStatement from '@/components/CopyrightStatement.vue'
 import LineButton from '@/components/LineButton.vue'
-import { navList, copyrightInfo } from '@/utils/constant'
+import { navList, copyrightInfo, sectionEyebrows } from '@/utils/constant'
 
 const headerRef = ref(null)
 const aboutSectionRef = ref(null)
@@ -144,15 +144,15 @@ document.documentElement.setAttribute('data-theme', 'dark')
 
         <!-- ====== Content ====== -->
         <main class="main">
-            <PresentSection ref="aboutSectionRef" title="关于">
+            <PresentSection ref="aboutSectionRef" title="关于" :eyebrow="sectionEyebrows.about">
                 <AboutMeSection></AboutMeSection>
             </PresentSection>
 
-            <PresentSection ref="careerSectionRef" title="经历">
+            <PresentSection ref="careerSectionRef" title="经历" :eyebrow="sectionEyebrows.career">
                 <CareerSection></CareerSection>
             </PresentSection>
 
-            <PresentSection ref="projectsSectionRef" title="项目">
+            <PresentSection ref="projectsSectionRef" title="项目" :eyebrow="sectionEyebrows.projects">
                 <ProjectsSection></ProjectsSection>
             </PresentSection>
 

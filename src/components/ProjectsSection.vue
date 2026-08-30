@@ -7,16 +7,21 @@ import { projectList, projectIntro } from '@/utils/constant'
     <div class="projects">
         <p class="projects-intro">{{ projectIntro }}</p>
         <div class="projects-grid">
-            <ProjectCard
+            <div
                 v-for="(item, index) in projectList"
                 :key="index"
-                :title="item.title"
-                :description="item.description"
-                :url="item.url"
-                :github="item.github"
-                :stars="item.stars ?? null"
-                :language="item.language ?? null"
-            />
+                class="projects-grid-item reveal"
+                :style="{ transitionDelay: `${index * 60}ms` }"
+            >
+                <ProjectCard
+                    :title="item.title"
+                    :description="item.description"
+                    :url="item.url"
+                    :github="item.github"
+                    :stars="item.stars ?? null"
+                    :language="item.language ?? null"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -44,6 +49,25 @@ import { projectList, projectIntro } from '@/utils/constant'
     grid-column: 1 / -1;
     justify-self: center;
     width: calc(50% - 12px);
+}
+
+/* Scroll reveal with stagger (per-index delay set inline) */
+.projects-grid-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+        opacity 0.6s ease-out,
+        transform 0.6s ease-out;
+}
+
+.projects-grid-item.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Cards stretch to fill the wrapper so a row keeps equal heights */
+.projects-grid-item .project-card {
+    height: 100%;
 }
 
 @media (max-width: 768px) {

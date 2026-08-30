@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Github, Mail, BookOpen } from 'lucide-vue-next'
-import { contactLinks, contactIntro } from '@/utils/constant'
+import { contactLinks, contactIntro, sectionEyebrows } from '@/utils/constant'
 
 const sectionEl = ref(null)
 defineExpose({ sectionEl })
@@ -11,6 +11,7 @@ const iconMap = { github: Github, email: Mail, blog: BookOpen }
 
 <template>
     <div class="contact" ref="sectionEl">
+        <span class="contact-eyebrow">{{ sectionEyebrows.contact }}</span>
         <h2 class="contact-title">联系</h2>
         <p class="contact-subtitle">{{ contactIntro }}</p>
         <div class="contact-links">
@@ -33,6 +34,16 @@ const iconMap = { github: Github, email: Mail, blog: BookOpen }
 .contact {
     text-align: center;
     padding: 120px 20px;
+}
+
+.contact-eyebrow {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
 }
 
 .contact-title {
@@ -60,6 +71,8 @@ const iconMap = { github: Github, email: Mail, blog: BookOpen }
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    width: 120px;
+    flex-shrink: 0;
     padding: 16px 24px;
     border-radius: 8px;
     border: 1px solid var(--border);

@@ -4,6 +4,7 @@ import { useScrollReveal } from '@/composables/useScrollReveal'
 
 const props = defineProps({
     title: String,
+    eyebrow: String,
 })
 const sectionEl = ref(null)
 const { revealRoot } = useScrollReveal()
@@ -14,7 +15,10 @@ defineExpose({ sectionEl })
 <template>
     <section class="section" ref="revealRoot">
         <div ref="sectionEl" class="section-anchor"></div>
-        <h2 class="section-title reveal">{{ props.title }}</h2>
+        <div class="section-header reveal">
+            <span class="section-eyebrow">{{ props.eyebrow }}</span>
+            <h2 class="section-title">{{ props.title }}</h2>
+        </div>
         <div class="section-body reveal">
             <slot></slot>
         </div>
@@ -35,11 +39,25 @@ defineExpose({ sectionEl })
     pointer-events: none;
 }
 
+.section-header {
+    margin-bottom: 48px;
+}
+
+/* Eyebrow — small uppercase English label above the title */
+.section-eyebrow {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
 .section-title {
     font-size: 28px;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 48px;
 }
 
 /* Scroll reveal */

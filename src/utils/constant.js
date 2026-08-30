@@ -14,6 +14,13 @@ export const typewriterTexts = [
     '认真努力地生活着',
 ]
 
+export const sectionEyebrows = {
+    about: 'ABOUT',
+    career: 'CAREER',
+    projects: 'PROJECTS',
+    contact: 'CONTACT',
+}
+
 export const aboutMeParagraph = [
     '千禧年生人，巨蟹座。来自河南信阳，现居浙江杭州。',
     '喜欢美食、喜欢摄影、喜欢一切美好的事物。科技数码、美食萌宠，是某站首页的常客。闲时打打游戏，没事到处走走。',
@@ -24,7 +31,7 @@ export const careerIntro = '热衷于技术探索与创新，持续提升专业�
 
 export const projectIntro = '业余时间鼓捣的一些小项目，持续打磨设计与体验。'
 
-export const contactIntro = '很高兴认识你。'
+export const contactIntro = '海内存知己，天涯若比邻。'
 
 export const personalInfo = [
     { icon: 'MapPin', label: '所在地', value: '浙江 杭州' },
