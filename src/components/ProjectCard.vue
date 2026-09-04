@@ -1,4 +1,6 @@
 <script setup>
+import { ExternalLink } from 'lucide-vue-next'
+
 defineProps({
     title: String,
     description: String,
@@ -20,6 +22,24 @@ defineProps({
     },
 })
 
+// GitHub-style language colors (dark-theme friendly); orange as fallback
+const LANG_COLORS = {
+    C: '#8a94a6',
+    'C++': '#f34b7d',
+    JavaScript: '#f1e05a',
+    TypeScript: '#3178c6',
+    Python: '#3572a5',
+    Go: '#00add8',
+    Rust: '#dea584',
+    Shell: '#89e051',
+    Java: '#b07219',
+    Vue: '#41b883',
+}
+
+function langColor(language) {
+    return LANG_COLORS[language] || 'var(--tag-text-orange)'
+}
+
 function handleClick(url) {
     if (url) {
         window.open(url, '_blank')
@@ -32,42 +52,44 @@ function handleClick(url) {
         <div class="card-glow"></div>
 
         <div class="card-body">
-            <h3 class="card-title">{{ title }}</h3>
+            <div class="card-header">
+                <h3 class="card-title">{{ title }}</h3>
+                <!-- Website link is special: sits alone in the top-right corner -->
+                <a
+                    v-if="url"
+                    :href="url"
+                    target="_blank"
+                    class="card-site"
+                    aria-label="访问网站"
+                    title="访问网站"
+                    @click.stop
+                >
+                    <ExternalLink :size="15" />
+                </a>
+            </div>
             <p class="card-description">{{ description }}</p>
         </div>
 
-        <div class="card-footer">
-            <!-- Website link -->
+        <!-- Unified GitHub strip: source link, stars and language -->
+        <div v-if="github" class="card-footer">
             <a
-                v-if="url"
-                :href="url"
+                :href="github"
                 target="_blank"
                 class="card-link"
                 @click.stop
             >
-                访问网站
+                查看源码
                 <span class="card-link-arrow">→</span>
             </a>
 
-            <!-- GitHub metadata -->
-            <div v-if="github || stars !== null" class="card-meta">
+            <div class="card-meta">
                 <span v-if="stars !== null" class="card-meta-item">
                     ★ {{ stars }}
                 </span>
                 <span v-if="language" class="card-meta-item">
-                    <span class="lang-dot"></span>
+                    <span class="lang-dot" :style="{ background: langColor(language) }"></span>
                     {{ language }}
                 </span>
-                <a
-                    v-if="github"
-                    :href="github"
-                    target="_blank"
-                    class="card-link card-meta-item"
-                    @click.stop
-                >
-                    查看源码
-                    <span class="card-link-arrow">→</span>
-                </a>
             </div>
         </div>
     </div>
@@ -112,11 +134,36 @@ function handleClick(url) {
     z-index: 1;
 }
 
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
 .card-title {
     font-size: 18px;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 12px;
+}
+
+/* Corner site link — subtle icon button */
+.card-site {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+
+.card-site:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
 }
 
 .card-description {
@@ -177,6 +224,5 @@ function handleClick(url) {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--tag-text-orange);
 }
 </style>

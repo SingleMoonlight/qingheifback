@@ -1,6 +1,80 @@
 <script setup>
+import { onMounted, ref } from 'vue'
 import ProjectCard from './ProjectCard.vue'
 import { projectList, projectIntro } from '@/utils/constant'
+
+// Fetch GitHub stars & language at runtime, cached locally for a day.
+// Cache keeps requests at ~3 per visitor per day, far below the
+// anonymous API limit (60 requests/hour/IP). Failures degrade silently.
+const CACHE_KEY = 'qinghe:gh-repos'
+const CACHE_TTL = 24 * 60 * 60 * 1000
+
+const projects = ref(projectList.map((p) => ({ ...p })))
+
+function repoPath(url) {
+    const m = String(url || '').match(/github\.com\/([^/]+\/[^/]+?)\/?$/)
+    return m ? m[1] : null
+}
+
+function readCache() {
+    try {
+        const raw = localStorage.getItem(CACHE_KEY)
+        if (!raw) return null
+        const parsed = JSON.parse(raw)
+        if (!parsed || typeof parsed.ts !== 'number' || Date.now() - parsed.ts > CACHE_TTL) return null
+        return parsed.data || {}
+    } catch {
+        return null
+    }
+}
+
+function writeCache(data) {
+    try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }))
+    } catch {
+        // Storage unavailable (private mode / full) — fetch again next visit
+    }
+}
+
+async function fetchRepoMeta() {
+    const paths = [...new Set(projects.value.map((p) => repoPath(p.github)).filter(Boolean))]
+    if (paths.length === 0) return
+
+    const cache = readCache() ?? {}
+    const missing = paths.filter((path) => cache[path] === undefined)
+    let fresh = {}
+
+    if (missing.length > 0) {
+        const results = await Promise.allSettled(
+            missing.map(async (path) => {
+                const res = await fetch(`https://api.github.com/repos/${path}`, {
+                    headers: { Accept: 'application/vnd.github+json' },
+                })
+                if (!res.ok) throw new Error(`GitHub API ${res.status}`)
+                const data = await res.json()
+                return { path, stars: data.stargazers_count, language: data.language }
+            })
+        )
+        results.forEach((r) => {
+            if (r.status === 'fulfilled') {
+                fresh[r.value.path] = { stars: r.value.stars ?? null, language: r.value.language ?? null }
+            }
+        })
+        if (Object.keys(fresh).length > 0) writeCache({ ...cache, ...fresh })
+    }
+
+    const meta = { ...cache, ...fresh }
+    projects.value.forEach((p) => {
+        const path = repoPath(p.github)
+        const m = meta[path]
+        if (m) {
+            p.stars = m.stars
+            p.language = m.language
+        }
+    })
+}
+
+onMounted(fetchRepoMeta)
 </script>
 
 <template>
@@ -8,7 +82,7 @@ import { projectList, projectIntro } from '@/utils/constant'
         <p class="projects-intro">{{ projectIntro }}</p>
         <div class="projects-grid">
             <div
-                v-for="(item, index) in projectList"
+                v-for="(item, index) in projects"
                 :key="index"
                 class="projects-grid-item reveal"
                 :style="{ transitionDelay: `${index * 60}ms` }"

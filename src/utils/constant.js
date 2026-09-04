@@ -62,13 +62,13 @@ export const projectList = [
         title: 'Qinghe Guide',
         description: '简约美观的导航网站，支持自定义设置。马上开始简单纯粹的搜索之旅。',
         url: 'https://guide.ifback.com/',
-        github: null
+        github: 'https://github.com/SingleMoonlight/qingheguide'
     },
     {
         title: 'Qinghe Blog',
         description: '记录学习内容、整理技术知识、分享生活随笔的个人博客网站。',
         url: 'https://blog.ifback.com/',
-        github: null
+        github: 'https://github.com/SingleMoonlight/qingheblog'
     },
     {
         title: 'C Relation',
